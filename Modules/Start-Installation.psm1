@@ -21,7 +21,7 @@ function Start-Installation
         $StartValue,
         # If the temporary file should be removed after installation
         [switch]
-        $DeleteFile
+        $DeleteFile = $true
     )
 
     # Create the path that we are going to use
@@ -33,5 +33,5 @@ function Start-Installation
     # Start the process with a clean Path and wait for it to finish
     Start-Process -FilePath $file -ArgumentList $Arguments -UseNewEnvironment -Wait
     # Finally, remove the temp file that we used
-    if (-Not $DeleteFile) { Remove-Item -Path $file -Force }
+    if ($DeleteFile) { Remove-Item -Path $file -Force }
 }
