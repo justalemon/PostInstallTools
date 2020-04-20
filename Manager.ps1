@@ -1,24 +1,36 @@
 param (
     # The programs to install
     [String[]]
-    $Features,
-    # The features to install
+    $Install,
+    # The features to enable
     [String[]]
-    $Software,
+    $Enable,
     # If all of the programs should be installed
     [switch]
-    $InstallAllPrograms = $false,
+    $InstallAll = $false,
     # If all of the features should be installed
     [switch]
-    $InstallAllFeatures = $false
+    $EnableAll = $false
 )
 
 # Start by importing the custom modules
 Import-Module -Force ".\Modules\Invoke-Everything.psm1"
 Import-Module -Force ".\Modules\Start-Installation.psm1"
+Import-Module -Force ".\Modules\Start-Script.psm1"
 
-# Iterate over the programs that we need to install
-$Software | ForEach-Object {
-    # And run that scripts of it
-    & ".\Software\$_.ps1"
+# Either install everything
+if ($InstallAll) {
+    Get-ChildItem ".\Software\*.ps1" | ForEach-Object {
+        Start-Script $_.FullName
+    }
+}
+# Install specific programs
+elseif ($Install) {
+    $Install | ForEach-Object {
+        Start-Script ".\Software\$_.ps1"
+    }
+}
+# Or nothing
+else {
+    Write-Host "Skipping installation of Software" -ForegroundColor Magenta
 }
