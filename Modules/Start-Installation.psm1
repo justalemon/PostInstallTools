@@ -34,4 +34,8 @@ function Start-Installation
     Start-Process -FilePath $file -ArgumentList $Arguments -UseNewEnvironment -Wait
     # Finally, remove the temp file that we used
     if ($DeleteFile) { Remove-Item -Path $file -Force }
+    # And delete the run on start key if is present
+    if ($StartKey -And $StartValue) {
+        Remove-ItemProperty -Path $StartKey -Name $StartValue
+    }
 }
