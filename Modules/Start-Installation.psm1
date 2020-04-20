@@ -25,6 +25,7 @@ function Start-Installation
         [switch]
         $IsMSI = $false
     )
+    $ProgressPreference = "SilentlyContinue"
 
     # Create the path that we are going to use
     $ext = if ($IsMSI) {"msi"} else {"exe"}
@@ -62,4 +63,5 @@ function Start-Installation
     if ($StartKey -And $StartValue) {
         Remove-ItemProperty -Path $StartKey -Name $StartValue
     }
+    $ProgressPreference = "Continue"
 }
