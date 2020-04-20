@@ -10,9 +10,8 @@ function Start-Installation
         [String]
         $Uri,
         # Arguments to pass onto the executable
-        [Parameter(Mandatory=$true)]
         [String[]]
-        $Arguments,
+        $Arguments = @(),
         # The registry key that makes the application auto start
         [String]
         $StartKey,
@@ -47,7 +46,16 @@ function Start-Installation
     }
 
     # Start the process with a clean Path and wait for it to finish
-    Start-Process -FilePath $file -ArgumentList $Arguments -UseNewEnvironment -Wait
+    # Sadly we need to do it like this for optional arguments
+    # https://github.com/PowerShell/PowerShell/issues/4520 is not part of PS 5.1
+    if ($Arguments)
+    {
+        Start-Process -FilePath $Executable -ArgumentList $Arguments -UseNewEnvironment -Wait
+    }
+    else {
+        Start-Process -FilePath $Executable -UseNewEnvironment -Wait
+    }
+
     # Finally, remove the temp file that we used
     if ($DeleteFile) { Remove-Item -Path $file -Force }
     # And delete the run on start key if is present
