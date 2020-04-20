@@ -62,11 +62,11 @@ function Start-Installation
     if ($Arguments)
     {
         Write-Host $Arguments -ForegroundColor White
-        Start-Process -FilePath $Executable -ArgumentList $Arguments -UseNewEnvironment -Wait
+        Start-Process -FilePath $Executable -ArgumentList $Arguments -Wait
     }
     else {
         Write-Host "" -ForegroundColor White
-        Start-Process -FilePath $Executable -UseNewEnvironment -Wait
+        Start-Process -FilePath $Executable -Wait
     }
 
     # Finally, remove the temp file that we used
