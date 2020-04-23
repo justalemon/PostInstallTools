@@ -14,6 +14,7 @@ param (
 )
 
 # Start by importing the custom modules
+Import-Module -Force ".\Modules\Enable-Feature.psm1"
 Import-Module -Force ".\Modules\Invoke-Everything.psm1"
 Import-Module -Force ".\Modules\Start-Installation.psm1"
 Import-Module -Force ".\Modules\Start-Script.psm1"
