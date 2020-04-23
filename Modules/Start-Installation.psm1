@@ -1,3 +1,23 @@
+# Gets an extension for an installation type
+function Get-Extension
+{
+    param(
+        # The type of installation file
+        [int]
+        $Type
+    )
+
+    if ($Type -eq 0) {
+        return "exe"
+    }
+    elseif ($Type -eq 1) {
+        return "msi"
+    }
+    else {
+        return "exe"
+    }
+}
+
 function Start-Installation
 {
     param(
@@ -21,9 +41,10 @@ function Start-Installation
         # If the temporary file should be removed after installation
         [switch]
         $DeleteFile = $true,
-        # If the installation uses an MSI file via msiexec.exe
-        [switch]
-        $IsMSI = $false
+        # The type of installation file
+        # 0 is exe, 1 is msi
+        [int]
+        $Type = 0
     )
     # Log the name of the program that we are installing and do some tweaking
     Write-Host "Starting installation of " -ForegroundColor Cyan -NoNewline
@@ -31,7 +52,7 @@ function Start-Installation
     $ProgressPreference = "SilentlyContinue"
 
     # Create the path that we are going to use
-    $ext = if ($IsMSI) {"msi"} else {"exe"}
+    $ext = Get-Extension $Type
     $file = "$env:TEMP\$Name.Installer.$ext"
 
     # Remove the existing temp file if it exists
@@ -45,7 +66,7 @@ function Start-Installation
     Invoke-WebRequest -Uri $Uri -OutFile $file
 
     # If this is an MSI, add the msiexec arguments and set the correct executable
-    if ($IsMSI)
+    if ($Type -eq 1)
     {
         $Arguments = "/i",$file,"/passive" + $Arguments
         $Executable = "C:\Windows\System32\msiexec.exe"
