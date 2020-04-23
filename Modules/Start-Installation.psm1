@@ -68,7 +68,7 @@ function Start-Installation
     # If this is an MSI, add the msiexec arguments and set the correct executable
     if ($Type -eq 1)
     {
-        $Arguments = "/i",$file,"/passive" + $Arguments
+        $Arguments = "/i","""$file""","/passive" + $Arguments
         $Executable = "C:\Windows\System32\msiexec.exe"
     }
     else {
